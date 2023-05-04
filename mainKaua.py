@@ -1,5 +1,5 @@
-## ALUNO: Arthur Leme
-## ALUNO: Felipe de Lima
+## ALUNO: Kauã da Silva Nunes
+## ALUNO: Luiz Fernando Reis Pereira
 import sys
 from MemoriaCache import MemoriaCache
 # from variaveis import instruction_list, instruction_relation
@@ -97,13 +97,30 @@ instruction_relation = {
 def execute_instruction(instruction, ids):
     return instruction_function[instruction['instruction']](instruction, ids)
 
-def execute_add(instruction, memoria_id, value_id):
-    value = memoria.getValorMemoria(value_id)
-    value_memoria = memoria.getValorMemoria(memoria_id)
-    register_map = {2: registrador_ax, 3: registrador_bx, 4: registrador_cx, 5: registrador_dx}
-    value_1 = register_map.get(value_memoria, 0)
-    value = register_map.get(value, value)
+
+def execute_add(instruction, ids):
+    value = memoria.getValorMemoria(ids[1])
+    value_memoria = memoria.getValorMemoria(ids[0])
+    value_1 = 0
+    if value_memoria == 2:
+        value_1 = registrador_ax
+    elif value_memoria == 3:
+        value_1 = registrador_bx
+    elif value_memoria == 4:
+        value_1 = registrador_cx
+    elif value_memoria == 5:
+        value_1 = registrador_dx
+    if instruction['id'] == 1:
+        if value == 2:
+            value = registrador_ax
+        elif value == 3:
+            value = registrador_bx
+        elif value == 4:
+            value = registrador_cx
+        elif value == 5:
+            value = registrador_dx
     return value_memoria, int(value + value_1)
+
 
 def execute_jmp(instruction, ids):
     print(memoria.getValorMemoria(ids[0]))
@@ -111,47 +128,53 @@ def execute_jmp(instruction, ids):
 
 
 def execute_mov(instruction, ids):
-    value_1 = memoria.getValorMemoria(ids[1])
-    value_0 = memoria.getValorMemoria(ids[0])
-    
-    if value_1 in [2, 3, 4, 5] and instruction['id'] == 7:
-        if value_1 == 2:
-            value_1 = registrador_ax
-        elif value_1 == 3:
-            value_1 = registrador_bx
-        elif value_1 == 4:
-            value_1 = registrador_cx
-        elif value_1 == 5:
-            value_1 = registrador_dx
-    
-    return value_0, value_1
+    value = memoria.getValorMemoria(ids[1])
+    if instruction['id'] == 7:
+        if value == 2:
+            value = registrador_ax
+        elif value == 3:
+            value = registrador_bx
+        elif value == 4:
+            value = registrador_cx
+        elif value == 5:
+            value = registrador_dx
+    return memoria.getValorMemoria(ids[0]), value
+
 
 def execute_inc(instruction, ids):
-    value_memoria = memoria.getValorMemoria(ids[0])
-    value_1 = {
-        2: registrador_ax,
-        3: registrador_bx,
-        4: registrador_cx,
-        5: registrador_dx
-    }.get(value_memoria, value_memoria)
-    return ids[0], value_1 + 1
+    value = memoria.getValorMemoria(ids[0])
+    if value == 2:
+        value = registrador_ax
+    elif value == 3:
+        value = registrador_bx
+    elif value == 4:
+        value = registrador_cx
+    elif value == 5:
+        value = registrador_dx
+    return memoria.getValorMemoria(ids[0]), value + 1
+
 
 def execute_sub(instruction, ids):
     value = memoria.getValorMemoria(ids[1])
     value_memoria = memoria.getValorMemoria(ids[0])
-    value_1 = {
-        2: registrador_ax,
-        3: registrador_bx,
-        4: registrador_cx,
-        5: registrador_dx
-    }.get(value_memoria, 0)
+    value_1 = 0
+    if value_memoria == 2:
+        value_1 = registrador_ax
+    elif value_memoria == 3:
+        value_1 = registrador_bx
+    elif value_memoria == 4:
+        value_1 = registrador_cx
+    elif value_memoria == 5:
+        value_1 = registrador_dx
     if instruction['id'] == 1:
-        value = {
-            2: registrador_ax,
-            3: registrador_bx,
-            4: registrador_cx,
-            5: registrador_dx
-        }.get(value, 0)
+        if value == 2:
+            value = registrador_ax
+        elif value == 3:
+            value = registrador_bx
+        elif value == 4:
+            value = registrador_cx
+        elif value == 5:
+            value = registrador_dx
     return value_memoria, value - value_1
 
 def execute_jz(instruction, ids): 
@@ -161,20 +184,38 @@ def execute_jz(instruction, ids):
         return 0, registrador_cp
 
 def execute_dec(instruction, ids):
-    value_memoria = memoria.getValorMemoria(ids[0])
-    if value_memoria in (2, 3, 4, 5):
-        value = globals()[f"registrador_{registers[value_memoria-2]}"]
-    else:
-        value = value_memoria
-    return value_memoria, value - 1
+    value = memoria.getValorMemoria(ids[0])
+    if value == 2:
+        value = registrador_ax
+    elif value == 3:
+        value = registrador_bx
+    elif value == 4:
+        value = registrador_cx
+    elif value == 5:
+        value = registrador_dx
+    return memoria.getValorMemoria(ids[0]), value - 1
 
 def execute_cmp(instruction, ids):
     value = memoria.getValorMemoria(ids[1])
     value_memoria = memoria.getValorMemoria(ids[0])
-    registradores = {2: registrador_ax, 3: registrador_bx, 4: registrador_cx, 5: registrador_dx}
-    value_1 = registradores.get(value_memoria, 0)
+    value_1 = 0
+    if value_memoria == 2:
+        value_1 = registrador_ax
+    elif value_memoria == 3:
+        value_1 = registrador_bx
+    elif value_memoria == 4:
+        value_1 = registrador_cx
+    elif value_memoria == 5:
+        value_1 = registrador_dx
     if instruction['id'] == 10:
-        value = registradores.get(value, 0)
+        if value == 2:
+            value = registrador_ax
+        elif value == 3:
+            value = registrador_bx
+        elif value == 4:
+            value = registrador_cx
+        elif value == 5:
+            value = registrador_dx
     return 6, value_1 == value
 
 instruction_function = {
@@ -188,19 +229,22 @@ instruction_function = {
     'JZ': execute_jz
 }
 
-registers = {
-    2: 'registrador_ax',
-    3: 'registrador_bx',
-    4: 'registrador_cx',
-    5: 'registrador_dx',
-    6: 'flag_zero'
-}
+
+def find_instruction_by_id(id):
+    for i in instruction_list:
+        if instruction_list[i]['id'] == id:
+            return instruction_list[i]
+
 
 def construct_phrase(function_name, instruction, parameters, separator):
-    phrase = function_name + instruction + " " + separator.join(parameters)
-    if parameters:
-        phrase = f"{phrase[0]}{phrase[1:]}"
+    phrase = function_name + instruction
+    for i in range(len(parameters)):
+        if i > 0:
+            phrase += separator + parameters[i]
+            continue
+        phrase += ' ' + parameters[i]
     return phrase
+
 
 def buscarEDecodificarInstrucao():
     instrucao = memoria.getValorMemoria(registrador_cp)
@@ -211,9 +255,7 @@ def buscarEDecodificarInstrucao():
 
 
 def lerOperadoresExecutarInstrucao(idInstrucao):
-    for i in instruction_list:
-        if instruction_list[i]['id'] == idInstrucao:
-            instruction = instruction_list[i]
+    instruction = find_instruction_by_id(idInstrucao)
     if len(instruction['parameters']) > 1:
         end_1 = registrador_cp + 1
         end_2 = registrador_cp + 2
@@ -227,9 +269,7 @@ def lerOperadoresExecutarInstrucao(idInstrucao):
 
 def calcularProximaInstrucao(idInstrucao):
     global registrador_cp
-    for i in instruction_list:
-        if instruction_list[i]['id'] == idInstrucao:
-            instruction = instruction_list[i]
+    instruction = find_instruction_by_id(idInstrucao)
     nextInstruction = registrador_cp + len(instruction['parameters']) + 1
     if instruction['id'] == 8:
         nextInstruction = registrador_cp       
@@ -254,14 +294,22 @@ if __name__ == '__main__':
 
         # ULA
         id, value = lerOperadoresExecutarInstrucao(idInstrucao)
-        if id in registers:
-            locals()[registers[id]] = value
+        if id == 2:
+            registrador_ax = value
+        elif id == 3:
+            registrador_bx = value
+        elif id == 4:
+            registrador_cx = value
+        elif id == 5:
+            registrador_dx = value
+        elif id == 6:
+            flag_zero = value
         else:
             registrador_cp = value
-            
         dumpRegistradores()
         #
         # #Unidade de Controle
         
         calcularProximaInstrucao(idInstrucao)
+        # apenas para nao ficar em loop voce pode comentar a linha abaixo =)
         sys.stdin.read(1)
