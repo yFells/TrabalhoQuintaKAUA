@@ -13,8 +13,8 @@ registrador_dx = 0x00
 
 flag_zero = False
 
-memoria = MemoriaCache('arquivos_memoria/mov_mov_add.bin')
-# memoria = MemoriaCache('arquivos_memoria/inc_dec.bin')
+# memoria = MemoriaCache('arquivos_memoria/mov_mov_add.bin')
+memoria = MemoriaCache('arquivos_memoria/inc_dec.bin')
 # memoria = MemoriaCache('arquivos_memoria/todas_instrucoes.bin')
 # memoria = MemoriaCache('arquivos_memoria/programa_simples.bin')
 # memoria = MemoriaCache('arquivos_memoria/fibonacci_10.bin')
@@ -96,13 +96,23 @@ instruction_relation = {
 def execute_instruction(instruction, ids):
     return instruction_function[instruction['instruction']](instruction, ids)
 
-def execute_add(instruction, memoria_id, value_id):
-    value = memoria.getValorMemoria(value_id)
-    value_memoria = memoria.getValorMemoria(memoria_id)
-    register_map = {2: registrador_ax, 3: registrador_bx, 4: registrador_cx, 5: registrador_dx}
-    value_1 = register_map.get(value_memoria, 0)
-    value = register_map.get(value, value)
-    return value_memoria, int(value + value_1)
+def execute_add(instruction, ids):
+    value_memoria = memoria.getValorMemoria(ids[0])
+    value_1 = {
+        2: registrador_ax,
+        3: registrador_bx,
+        4: registrador_cx,
+        5: registrador_dx
+    }.get(value_memoria, 0)
+
+    value = {
+        2: registrador_ax,
+        3: registrador_bx,
+        4: registrador_cx,
+        5: registrador_dx
+    }.get(memoria.getValorMemoria(ids[1]), memoria.getValorMemoria(ids[1]))
+
+    return value_memoria, value + value_1
 
 def execute_jmp(instruction, ids):
     print(memoria.getValorMemoria(ids[0]))
