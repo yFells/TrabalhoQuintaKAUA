@@ -2,7 +2,6 @@
 ## ALUNO: Felipe de Lima
 import sys
 from MemoriaCache import MemoriaCache
-# from variaveis import instruction_list, instruction_relation
 
 CPU_DEBUG = True
 
